@@ -1,25 +1,26 @@
-const  mysql2 = require("mysql2");
-const conn = mysql2.createConnection({
-    host:"localhost",
-    user:"root",
-    password:"abhiram@1234",
-    database:"vadla_abhiram"
-});
-conn.connect((err)=>{
-    if(err){
-        console.log(err.message);
-    }
-    else{
-        console.log("established connection to sql");
-    }
-})
+const mysql2 = require("mysql2");
 
-// conn.query("select * from btech",(err,data)=>{
-//     if(err){
-//         console.log(err.message);
-//     }
-//     else{
-//         console.log(data);
-//     }
-// }) 
+require('dotenv').config();
+
+const conn = mysql2.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+});
+
+// Test the connection
+conn.getConnection((err, connection) => {
+    if (err) {
+        console.error("Error connecting to the database:", err.message);
+    } else {
+        console.log("Connection to the database established successfully!");
+        connection.release(); // Release the connection back to the pool
+    }
+});
+
+// Export the pool for reuse in other files
 module.exports = conn;
