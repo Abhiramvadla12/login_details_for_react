@@ -8,15 +8,13 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json()); // Allows parsing JSON bodies in requests
-
-// Routes
 app.get("/login", (req, res) => {
     conn.query("SELECT * FROM login_details", (err, info) => {
         if (err) {
-            console.error("Database Query Error:", err.message);
+            console.error("Database Query Error:", err); // Log the full error object
             return res.status(400).send({
                 message: "Failed to retrieve login details",
-                error: err.message,
+                error: err.message, // Log specific error message
                 status: 400
             });
         }
